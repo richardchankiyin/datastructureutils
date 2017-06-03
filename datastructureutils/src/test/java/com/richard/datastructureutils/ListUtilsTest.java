@@ -154,6 +154,37 @@ public class ListUtilsTest {
 		assertEquals("1", result.get(2).getRight());
 	}
 	
+	@Test
+	public void testGetCombinationsDuplicate() {
+		List<Integer> list = Arrays.asList(1,2,3);
+		List<ImmutablePair<Integer,Integer>> result = ListUtils.getCombinations(list, false);
+		logger.debug("testGetCombinationsDuplicate: {}", result);
+		int i = 0;
+		assertEquals(ImmutablePair.of(1, 1),result.get(i++));
+		assertEquals(ImmutablePair.of(1, 2),result.get(i++));
+		assertEquals(ImmutablePair.of(1, 3),result.get(i++));
+		
+		assertEquals(ImmutablePair.of(2, 1),result.get(i++));
+		assertEquals(ImmutablePair.of(2, 2),result.get(i++));
+		assertEquals(ImmutablePair.of(2, 3),result.get(i++));
+		
+		assertEquals(ImmutablePair.of(3, 1),result.get(i++));
+		assertEquals(ImmutablePair.of(3, 2),result.get(i++));
+		assertEquals(ImmutablePair.of(3, 3),result.get(i++));
+	}
+	
+	@Test
+	public void testGetCombinationsNoDuplicate() {
+		List<Integer> list = Arrays.asList(1,2,3);
+		List<ImmutablePair<Integer,Integer>> result = ListUtils.getCombinations(list, true);
+		logger.debug("testGetCombinationsNoDuplicate: {}", result);
+		int i = 0;
+		assertEquals(ImmutablePair.of(1, 2),result.get(i++));
+		assertEquals(ImmutablePair.of(1, 3),result.get(i++));
+		assertEquals(ImmutablePair.of(2, 3),result.get(i++));
+		
+	}
+	
 	@Ignore
 	@Test
 	public void testListDiffPerf100Items() {

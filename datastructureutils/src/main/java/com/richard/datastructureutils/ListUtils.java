@@ -18,14 +18,34 @@ public class ListUtils {
 		// in order to make the comparison faster, will change to HashSet
 		// hashset contains -> O(1) and arraylist contains -> O(n)
 		
-		Set<E> collectionSet = new HashSet<E>(collection);
 		Set<E> removeSet = new HashSet<E>(remove);
 		
-        for (final E obj : collectionSet) {
+		for (final E obj : collection) {
             if (!removeSet.contains(obj)) {
                 list.add(obj);
             }
         }
+        
+		// not using iterator as it is worse than enhanced for loop
+		/*
+		java.util.Iterator<E> iterator = collection.iterator();
+		while (iterator.hasNext()) {
+			E obj = iterator.next();
+			if (!removeSet.contains(obj)) {
+                list.add(obj);
+            } 
+		}
+        */
+		
+        // not using foreach stream due to worse performance
+		/*
+		collection.forEach(obj -> {
+			if (!removeSet.contains(obj)) {
+				list.add(obj);
+			}
+		});
+        */
+        
         
         return list;
 	}
@@ -60,6 +80,19 @@ public class ListUtils {
 			}
 		}
 		
+		return result;
+	}
+	
+	public static <E> List<ImmutablePair<E,E>> getCombinations(List<E> items, boolean noDuplicate) {
+		int size = items.size();
+		List<ImmutablePair<E,E>> result = new ArrayList<ImmutablePair<E,E>>();
+		for (int i = 0; i < size; ++i) {
+			E left = items.get(i);
+			for (int j = noDuplicate ? i+1 : 0; j < size; ++j) {
+				E right = items.get(j);
+				result.add(ImmutablePair.of(left, right));
+			}
+		}
 		return result;
 	}
 
