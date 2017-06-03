@@ -174,6 +174,27 @@ public class ListUtilsTest {
 	}
 	
 	@Test
+	public void testGetCombinationsDuplicateWithValue() {
+		List<Integer> list = Arrays.asList(1,2,3);
+		Integer[][] value = {{11,12,13},{21,22,23},{31,32,33}};
+		List<Triple<Integer,Integer,Integer>> result = ListUtils.getCombinations(list, value, false);
+		logger.debug("testGetCombinationsDuplicateWithValue: {}", result);
+		int i = 0;
+		assertEquals(Triple.of(1, 1, 11),result.get(i++));
+		assertEquals(Triple.of(1, 2, 12),result.get(i++));
+		assertEquals(Triple.of(1, 3, 13),result.get(i++));
+		
+		assertEquals(Triple.of(2, 1, 21),result.get(i++));
+		assertEquals(Triple.of(2, 2, 22),result.get(i++));
+		assertEquals(Triple.of(2, 3, 23),result.get(i++));
+		
+		assertEquals(Triple.of(3, 1, 31),result.get(i++));
+		assertEquals(Triple.of(3, 2, 32),result.get(i++));
+		assertEquals(Triple.of(3, 3, 33),result.get(i++));
+		
+	}
+	
+	@Test
 	public void testGetCombinationsNoDuplicate() {
 		List<Integer> list = Arrays.asList(1,2,3);
 		List<ImmutablePair<Integer,Integer>> result = ListUtils.getCombinations(list, true);
@@ -182,6 +203,20 @@ public class ListUtilsTest {
 		assertEquals(ImmutablePair.of(1, 2),result.get(i++));
 		assertEquals(ImmutablePair.of(1, 3),result.get(i++));
 		assertEquals(ImmutablePair.of(2, 3),result.get(i++));
+		
+	}
+	
+	@Test
+	public void testGetCombinationsNoDuplicateWithValue() {
+		List<Integer> list = Arrays.asList(1,2,3);
+		Integer[][] value = {{11,12,13},{21,22,23},{31,32,33}};
+		List<Triple<Integer,Integer,Integer>> result = ListUtils.getCombinations(list, value, true);
+		logger.debug("testGetCombinationsNoDuplicateWithValue: {}", result);
+		int i = 0;
+		assertEquals(Triple.of(1, 2, 12),result.get(i++));
+		assertEquals(Triple.of(1, 3, 13),result.get(i++));
+		assertEquals(Triple.of(2, 3, 23),result.get(i++));
+		
 		
 	}
 	

@@ -95,5 +95,18 @@ public class ListUtils {
 		}
 		return result;
 	}
+	
+	public static <E,V> List<Triple<E,E,V>> getCombinations(List<E> items, V[][] valueMap, boolean noDuplicate) {
+		int size = items.size();
+		List<Triple<E,E,V>> result = new ArrayList<Triple<E,E,V>>();
+		for (int i = 0; i < size; ++i) {
+			E left = items.get(i);
+			for (int j = noDuplicate ? i+1 : 0; j < size; ++j) {
+				E right = items.get(j);
+				result.add(Triple.of(left, right, valueMap[i][j]));
+			}
+		}
+		return result;
+	}
 
 }
