@@ -3,10 +3,12 @@ package com.richard.datastructureutils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -109,4 +111,26 @@ public class ListUtils {
 		return result;
 	}
 
+	public static <K,V> List<ImmutablePair<K,V>> combineKeyListAndValueList(List<K> keyList, List<V> valueList, Supplier<K> defaultKeySupplier, Supplier<V> defaultValueSupplier) {
+		Iterator<K> keyIterator = keyList.iterator();
+		Iterator<V> valueIterator = valueList.iterator();
+		
+		List<ImmutablePair<K,V>> result = new ArrayList<ImmutablePair<K,V>>();
+		
+		while (keyIterator.hasNext() || valueIterator.hasNext()) {
+			result.add(ImmutablePair.of(keyIterator.hasNext() ? keyIterator.next() : defaultKeySupplier.get()
+					, valueIterator.hasNext() ? valueIterator.next() : defaultValueSupplier.get()));
+		}
+		
+		return result;
+	}
+	
+	/*
+	public static <K,V> List<ImmutablePair<K,V>> combineKeyListAndValueList(List<K> keyList, List<V> valueList, K defaultKey, V defaultValue) {
+		Supplier<K> kf = ()->defaultKey;
+		Supplier<V> vf = ()->defaultValue;
+		return combineKeyListAndValueList(keyList, valueList, kf, vf);
+	}
+	*/
+	
 }

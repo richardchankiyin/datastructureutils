@@ -220,6 +220,42 @@ public class ListUtilsTest {
 		
 	}
 	
+	@Test
+	public void testCombineKeyListAndValueListEqualSizes() {
+		List<Integer> list1 = Arrays.asList(1,2,3);
+		List<Integer> list2 = Arrays.asList(2,4,6);
+		
+		List<ImmutablePair<Integer,Integer>> result = ListUtils.combineKeyListAndValueList(list1, list2, ()->-1, ()->-1);
+		
+		logger.debug("testCombineKeyListAndValueListEqualSizes: {}", result);
+		List<ImmutablePair<Integer,Integer>> expected = Arrays.asList(ImmutablePair.of(1, 2),ImmutablePair.of(2, 4),ImmutablePair.of(3, 6));
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	public void testCombineKeyListAndValueListKeySizeLarger() {
+		List<Integer> list1 = Arrays.asList(1,2,3,4);
+		List<Integer> list2 = Arrays.asList(2,4,6);
+		
+		List<ImmutablePair<Integer,Integer>> result = ListUtils.combineKeyListAndValueList(list1, list2, ()->-1, ()->-1);
+		
+		logger.debug("testCombineKeyListAndValueListKeySizeLarger: {}", result);
+		List<ImmutablePair<Integer,Integer>> expected = Arrays.asList(ImmutablePair.of(1, 2),ImmutablePair.of(2, 4),ImmutablePair.of(3, 6),ImmutablePair.of(4, -1));
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	public void testCombineKeyListAndValueListValueSizeLarger() {
+		List<Integer> list1 = Arrays.asList(1,2,3);
+		List<Integer> list2 = Arrays.asList(2,4,6,8);
+		
+		List<ImmutablePair<Integer,Integer>> result = ListUtils.combineKeyListAndValueList(list1, list2, ()->-1, ()->-1);
+		
+		logger.debug("testCombineKeyListAndValueListValueSizeLarger: {}", result);
+		List<ImmutablePair<Integer,Integer>> expected = Arrays.asList(ImmutablePair.of(1, 2),ImmutablePair.of(2, 4),ImmutablePair.of(3, 6),ImmutablePair.of(-1, 8));
+		assertEquals(expected, result);
+	}
+	
 	@Ignore
 	@Test
 	public void testListDiffPerf100Items() {

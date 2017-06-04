@@ -1,0 +1,1 @@
+mvn exec:java -Dexec.mainClass="com.richard.datastructureutils.app.TupleDiffApp" -Dexec.args="src/test/resources/csvfolder/file3.csv src/test/resources/csvfolder/file4.csv src/test/resources/ymlfolder/tuple_diff.yml src/test/resources/templates/tuple_diff.tpl src/test/resources/output/tuple_diff_output.log" 
