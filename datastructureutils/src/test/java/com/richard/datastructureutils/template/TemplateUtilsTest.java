@@ -63,4 +63,43 @@ public class TemplateUtilsTest {
 		
 		
 	}
+	
+	@Test
+	public void testGenerateContentMatrixDiff() {
+		Map<String,String> item1 = new HashMap<String,String>();
+		item1.put("field1", "a");
+		item1.put("field2", "b");
+		item1.put("base", "0.25");
+		item1.put("test", "0.23");
+		item1.put("diff", "0.02");
+		Map<String,String> item2 = new HashMap<String,String>();
+		item2.put("field1", "a");
+		item2.put("field2", "c");
+		item2.put("base", "0.45");
+		item2.put("test", "0.33");
+		item2.put("diff", "0.12");
+		List<Map<String,String>> itemlist = new ArrayList<Map<String,String>>();
+		itemlist.add(item1);
+		itemlist.add(item2);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("difflist", itemlist);
+		
+		String result = TemplateUtils.generateContent("src/test/resources/templates/matrix_diff.tpl", map);
+		
+		logger.debug("testGenerateContentMatrixDiff result: {}", result);
+		
+		assertTrue(result.contains("a"));
+		assertTrue(result.contains("b"));
+		assertTrue(result.contains("c"));
+		
+		assertTrue(result.contains("0.25")); 
+		assertTrue(result.contains("0.45"));
+		
+		assertTrue(result.contains("0.23")); 
+		assertTrue(result.contains("0.33"));
+		
+		assertTrue(result.contains("0.02")); 
+		assertTrue(result.contains("0.12"));
+
+	}
 }
