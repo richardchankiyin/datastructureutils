@@ -110,6 +110,19 @@ public class ListUtils {
 		}
 		return result;
 	}
+	
+	public static <E,V> List<ImmutablePair<ImmutablePair<E,E>,V>> getCombinationsAsTuple(List<E> items, V[][] valueMap, boolean noDuplicate) {
+		int size = items.size();
+		List<ImmutablePair<ImmutablePair<E,E>,V>> result = new ArrayList<ImmutablePair<ImmutablePair<E,E>,V>>();
+		for (int i = 0; i < size; ++i) {
+			E left = items.get(i);
+			for (int j = noDuplicate ? i+1 : 0; j < size; ++j) {
+				E right = items.get(j);
+				result.add(ImmutablePair.of(ImmutablePair.of(left, right), valueMap[i][j]));
+			}
+		}
+		return result;
+	}
 
 	public static <K,V> List<ImmutablePair<K,V>> combineKeyListAndValueList(List<K> keyList, List<V> valueList, Supplier<K> defaultKeySupplier, Supplier<V> defaultValueSupplier) {
 		Iterator<K> keyIterator = keyList.iterator();

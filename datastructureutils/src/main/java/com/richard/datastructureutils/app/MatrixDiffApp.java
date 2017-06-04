@@ -1,9 +1,13 @@
 package com.richard.datastructureutils.app;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.richard.datastructureutils.ListUtils;
 import com.richard.datastructureutils.csv.CSVUtils;
+import com.richard.datastructureutils.template.TemplateUtils;
 import com.richard.datastructureutils.yaml.YamlUtils;
 
 public class MatrixDiffApp {
@@ -57,14 +62,54 @@ public class MatrixDiffApp {
 		List<String> testKeyList = CSVUtils.readListOfStringFromCSV(testFileLocation, keyStartLine, keyStartCol);
 		String[][] testMatrix = CSVUtils.readMatrixOfStringFromCSV(testFileLocation, matrixStartLine, matrixStartCol, testKeyList.size());
 		
-		List<Triple<String,String,String>> baselineKeyMatrix = ListUtils.getCombinations(baselineKeyList, baselineMatrix, false);
-		List<Triple<String,String,String>> testKeyMatrix = ListUtils.getCombinations(testKeyList, testMatrix, false);
 		
-		List<Triple<String,String,String>> baselineOnlyItems = ListUtils.listDiff(baselineKeyMatrix, testKeyMatrix);
-		List<Triple<String,String,String>> testOnlyItems = ListUtils.listDiff(testKeyMatrix, baselineKeyMatrix);
 		
-		//TODO
+		List<ImmutablePair<ImmutablePair<String,String>,String>> baselineKeyMatrix = ListUtils.getCombinationsAsTuple(baselineKeyList, baselineMatrix, false);
+		List<ImmutablePair<ImmutablePair<String,String>,String>> testKeyMatrix = ListUtils.getCombinationsAsTuple(testKeyList, testMatrix, false);
 		
+		List<ImmutablePair<ImmutablePair<String,String>,String>> baselineOnlyItems = ListUtils.listDiff(baselineKeyMatrix, testKeyMatrix);
+		List<ImmutablePair<ImmutablePair<String,String>,String>> testOnlyItems = ListUtils.listDiff(testKeyMatrix, baselineKeyMatrix);
+		
+		List<Triple<ImmutablePair<String,String>,String, String>> changeItems = ListUtils.listDiffSummary(baselineOnlyItems, testOnlyItems, "NA");
+		
+		Map<String,Object> templateargs = new HashMap<String,Object>();
+		templateargs.put("difflist", triple2MapForTemplate(changeItems));
+		String result = TemplateUtils.generateContent(templateFile, templateargs);
+		try {
+			FileUtils.writeStringToFile(new File(output), result, Charset.defaultCharset());
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	private static List<Map<String,String>> triple2MapForTemplate(List<Triple<ImmutablePair<String,String>,String,String>> input) {
+		List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+		for (Triple<ImmutablePair<String,String>,String,String> item: input) {
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("field1", item.getLeft().getLeft());
+			map.put("field2", item.getLeft().getRight());
+			map.put("base", item.getMiddle());
+			map.put("test", item.getRight());
+			map.put("diff", calculateDiff(item.getMiddle(), item.getRight()));
+			result.add(map);
+		}
+		return result;
+	}
+	
+	private static String calculateDiff(String base, String test) {
+		try {
+			double baseD = Double.parseDouble(base);
+			double testD = Double.parseDouble(test);
+			
+			double diffD = (testD - baseD) / baseD;
+			
+			return String.valueOf(diffD);
+		}
+		catch (Exception e) {
+			return "NA";
+		}
 	}
 
 }
