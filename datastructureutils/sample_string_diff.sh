@@ -1,0 +1,1 @@
+mvn exec:java -Dexec.mainClass="com.richard.datastructureutils.app.StringDiffApp" -Dexec.args="src/test/resources/csvfolder/file1.csv src/test/resources/csvfolder/file2.csv src/test/resources/ymlfolder/string_diff.yml src/test/resources/templates/string_diff.tpl src/test/resources/output/string_diff_output.log" 
