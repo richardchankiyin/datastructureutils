@@ -11,17 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CSVUtilsTest {
+        private static final String FS = File.separator;
 	private static Logger logger = LoggerFactory.getLogger(CSVUtilsTest.class);
 	@Test
 	public void testReadListOfStringFromCSV() {
-		List<String> result = CSVUtils.readListOfStringFromCSV(new File("src\\test\\resources\\csvfolder\\file1.csv"), 1, 2);
+		List<String> result = CSVUtils.readListOfStringFromCSV(new File(String.format("src%stest%sresources%scsvfolder%sfile1.csv", FS, FS, FS, FS)), 1, 2);
 		List<String> expected = Arrays.asList("abc","def","xfbv","abcw");
 		assertEquals(expected,result);
 	}
 
 	@Test
 	public void testReadMatrixOfStringFromCSV() {
-		String[][] result = CSVUtils.readMatrixOfStringFromCSV(new File("src\\test\\resources\\csvfolder\\file5.csv"), 4, 2, 3);
+		String[][] result = CSVUtils.readMatrixOfStringFromCSV(new File(String.format("src%stest%sresources%scsvfolder%sfile5.csv", FS, FS, FS, FS)), 4, 2, 3);
 		
 		for (int i = 0; i < result.length; ++i) {
 			String[] resultitem = result[i];
